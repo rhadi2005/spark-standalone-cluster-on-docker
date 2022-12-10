@@ -13,7 +13,7 @@ LABEL org.label-schema.schema-version="1.0"
 
 # -- Layer: Notebooks and data
 
-ADD workspace/ ${SHARED_WORKSPACE}/
+#ADD workspace/ ${SHARED_WORKSPACE}/
 
 # -- Layer: JupyterLab + Python kernel for PySpark
 

@@ -1,5 +1,7 @@
-ARG debian_buster_image_tag=8-jre-slim
-FROM openjdk:${debian_buster_image_tag}
+#ARG debian_buster_image_tag=8-jre-slim;
+ARG debian_bullseye_image_tag=8-jre-slim-bullseye
+FROM openjdk:${debian_bullseye_image_tag}
+
 LABEL manteiner="Andre Perez <andre.marcos.perez@gmail.com>"
 
 # -- Layer: Image Metadata
@@ -20,7 +22,19 @@ ARG shared_workspace=/opt/workspace
 RUN mkdir -p ${shared_workspace}/data && \
     mkdir -p /usr/share/man/man1 && \
     apt-get update -y && \
-    apt-get install -y curl python3 r-base && \
+    apt-get install -y \
+        net-tools \
+        iputils-ping \
+        dnsutils \
+        apt-utils \
+        vim \
+        curl \
+        wget \
+        git \
+        unzip \
+        zip
+
+RUN apt-get install -y curl python3 r-base && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     curl https://downloads.lightbend.com/scala/${scala_version}/scala-${scala_version}.deb -k -o scala.deb && \
     apt install -y ./scala.deb && \
