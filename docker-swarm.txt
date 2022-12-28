@@ -1,10 +1,83 @@
 
+#https://docs.docker.com/engine/swarm/stack-deploy/
+#https://docs.docker.com/engine/reference/commandline/service_logs/
+#https://takacsmark.com/docker-logs/
+
+#https://testdriven.io/blog/running-spark-with-docker-swarm-on-digitalocean/
+#howto spark on swarm
+
+#https://www.baeldung.com/ops/docker-compose-restart-policies
+ - deploy:
+    - restart_policy:
+        - condition: none, on-failure, or any (default)
+        - delay: Duration between restart attempts
+        - max_attempts: Maximum number of attempts outside of the restart window
+        - window: Duration for determining if a restart is successful
+
+
+docker swarm init
+
+docker stack deploy -c docker-swarm-small.yml rf-bench 
+
+docker stack services rf-bench
+docker stack rm rf-bench
+
+
+docker swarm join
+docker swarm leave --force
+
+======================
+# testing with docker compose
+
+docker compose up -d  
+docker compose ps
+docker compose down
+
+docker compose push
+
+======================
+# testing with docker swarm
+
+docker swarm init
+docker stack deploy --compose-file docker-compose-swarm.yml rf-bench 
+docker stack services rf-bench
+
+curl http://localhost:8088
+
+
+docker stack rm rf-bench
+docker swarm leave --force
+
+docker service rm registry
+
+==============
+# docker swarm stdout
+The docker service logs command can be used with either the name or ID of a service, or with the ID of a task. If a service is passed, it will display logs for all of the containers in that service. If a task is passed, it will only display logs from that particular task.
+
+docker service logs <id or service>
+The docker service logs --follow command will continue streaming the new output from the service’s STDOUT and STDERR.
+
+docker service logs rf-bench_spark-master
+docker service logs --follow rf-bench_spark-master
+
+==============
+# docker registry in master swarm node
+
+docker service create --name registry --publish published=5000,target=5000 registry:2
+docker service ls
+curl http://localhost:5000/v2/
+
+
+
+==============
+
 this node is not a swarm manager. Use "docker swarm init" or "docker swarm join" to connect this node to swarm and try again
 
 docker swarm init
 
 docker swarm join
 
+docker swarm leave --force
 
 docker stack deploy -c docker-compose.yml rf-bench
 
@@ -19,5 +92,27 @@ To add a manager to this swarm, run 'docker swarm join-token manager' and follow
 
 
 Error response from daemon: This node is already part of a swarm. Use "docker swarm leave" to leave this swarm and join another one.
+
+
+================
+# network
+
+version: "3.7"
+
+services:
+  app:
+    image: nginx:alpine
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.10
+        ipv6_address: 2001:3984:3989::10
+
+networks:
+  app_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"
+        - subnet: "2001:3984:3989::/64"
 
 

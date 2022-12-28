@@ -1,0 +1,68 @@
+# ----------------------------------------------------------------------------------------
+# -- Docs: https://github.com/cluster-apps-on-docker/spark-standalone-cluster-on-docker --
+# ----------------------------------------------------------------------------------------
+version: "3.6"
+# volumes:
+#   shared-workspace:
+#     name: "hadoop-distributed-file-system"
+#     driver: local
+
+# networks:
+#     localnet:
+#         attachable: true
+
+services:
+
+  spark-master:
+    image: spark-master:3.1.2
+    # container_name: spark-master
+    environment:
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_PUBLIC_DNS=10.50.0.31
+      # - SPARK_DRIVER_MEMORY=16G
+      # - SPARK_DRIVER_MAXRESULTSIZE=16G
+      # - SPARK_DRIVER_MEMORY=512m
+      # - SPARK_DRIVER_MAXRESULTSIZE=512m
+    hostname: spark-master
+    ports:
+      - 8088:8080
+      - 7077:7077
+    volumes:
+      - ./workspace:/opt/workspace
+      - /home/cloud/dataset:/home/cloud/dataset
+    # networks:
+    #   - localnet
+    deploy:
+      replicas: 1
+      # restart_policy: 
+      #   condition: "none"
+
+  # spark-worker:
+  #   image: spark-worker:3.1.2
+  #   # container_name: spark-worker-1
+  #   environment:
+  #     - SPARK_WORKER_CORES=1
+  #     - SPARK_WORKER_MEMORY=512m
+  #     # - SPARK_WORKER_MEMORY=16G
+  #     # - SPARK_EXECUTOR_MEMORY=16G
+  #     # - SPARK_DRIVER_MEMORY=16G
+  #     # - SPARK_DRIVER_MAXRESULTSIZE=16G
+  #     - SPARK_MASTER_HOST=spark-master
+  #     - SPARK_MASTER_PORT=7077
+  #   extra_hosts:
+  #     - "ecs-python2:10.50.0.194"
+  #   ports:
+  #    - 8081:8081
+  #   volumes:
+  #     - ./workspace:/opt/workspace
+  #     - /home/cloud/dataset:/home/cloud/dataset
+  #   # restart: unless-stopped
+  #   deploy:
+  #     replicas: 2
+  #     # restart_policy: unless-stopped
+  #   networks:
+  #     - localnet
+  #   # depends_on:
+  #   #   - spark-master
+
