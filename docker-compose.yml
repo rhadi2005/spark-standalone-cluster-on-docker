@@ -26,6 +26,9 @@ services:
     image: spark-master:3.1.2
 
     container_name: spark-master
+    environment:
+      - SPARK_DRIVER_MEMORY=16G
+      - SPARK_DRIVER_MAXRESULTSIZE=16G
     ports:
       - 8088:8080
       - 7077:7077
@@ -40,8 +43,12 @@ services:
 
     container_name: spark-worker-1
     environment:
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_CORES=2
+#      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_MEMORY=16G
+      - SPARK_EXECUTOR_MEMORY=16G
+      - SPARK_DRIVER_MEMORY=16G
+      - SPARK_DRIVER_MAXRESULTSIZE=16G
       - SPARK_MASTER_HOST=ecs-python2
       - SPARK_MASTER_PORT=7077
     extra_hosts:
@@ -52,8 +59,10 @@ services:
 #      - shared-workspace:/opt/workspace
       - ./workspace:/opt/workspace
       - /home/cloud/dataset:/home/cloud/dataset
+    restart: unless-stopped
     # depends_on:
     #   - spark-master
+    #   restart_policy: unless-stopped
 
   spark-worker-2:
 #    image: andreper/spark-worker:3.0.0
@@ -61,8 +70,12 @@ services:
 
     container_name: spark-worker-2
     environment:
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_CORES=2
+#      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_MEMORY=16G
+      - SPARK_EXECUTOR_MEMORY=16G
+      - SPARK_DRIVER_MEMORY=16G
+      - SPARK_DRIVER_MAXRESULTSIZE=16G
       - SPARK_MASTER_HOST=ecs-python2
       - SPARK_MASTER_PORT=7077
     extra_hosts:
@@ -73,6 +86,8 @@ services:
 #      - shared-workspace:/opt/workspace
       - ./workspace:/opt/workspace
       - /home/cloud/dataset:/home/cloud/dataset
+    restart: unless-stopped
     # depends_on:
     #   - spark-master
+    #   restart_policy: unless-stopped
 ...
