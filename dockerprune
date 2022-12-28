@@ -1,0 +1,10 @@
+docker image ls
+
+#docker system prune --all --volumes --force
+
+#regular cleanup
+#===============
+docker rm -vf $(docker ps -aq) &
+sudo -i find /var/lib/docker -type f -name "*.log" -delete &
+
+
