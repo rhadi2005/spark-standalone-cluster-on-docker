@@ -1,0 +1,23 @@
+
+this node is not a swarm manager. Use "docker swarm init" or "docker swarm join" to connect this node to swarm and try again
+
+docker swarm init
+
+docker swarm join
+
+
+docker stack deploy -c docker-compose.yml rf-bench
+
+
+Swarm initialized: current node (o3eqb0b0fd9b9wozftevfghsa) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-4z3yxcws7mijuc6c51q6fz3878j3ljakafkjxvl5s10u5v7hiq-694n1xbpjinu6slt70i1jz44w 10.50.0.31:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+
+Error response from daemon: This node is already part of a swarm. Use "docker swarm leave" to leave this swarm and join another one.
+
+
